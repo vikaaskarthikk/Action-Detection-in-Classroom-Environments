@@ -201,8 +201,9 @@ Action-Detection-Classroom/
 
 ---
 
-## 👨‍💻 Contributor
-**Vikaas Karthik K – 1RV23SCN17**  
+## 👨‍💻 Contributors
+**Sumith **
+**Vikaas Karthik K **  
 Department of CSE  
 RV College of Engineering (RVCE)
 
