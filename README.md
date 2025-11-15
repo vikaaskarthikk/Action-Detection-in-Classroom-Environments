@@ -1,49 +1,59 @@
 # 🎯 Action Detection in Classroom Environment  
-A deep learning–based real-time system that detects and classifies classroom student actions such as **sitting, standing, walking, writing, sleeping, raising hand, and phone usage** using **YOLOv8**, **FastAPI**, and **React.js**. The system supports real-time monitoring, proximity analysis, and generates automated PDF reports for classroom analytics.
+A real-time deep-learning system for detecting student actions such as **sitting, standing, walking, writing, sleeping, raising hand, and phone usage** using **YOLOv5**, **FastAPI**, and **React.js**. The project enables automated classroom monitoring, behavior analytics, and PDF report generation.
 
 ---
 
 ## 📌 Project Overview
-This project implements a complete pipeline for classroom action monitoring using computer vision and deep learning. It identifies student activities from video input and provides insights such as action distribution, timestamps, and behavioral patterns. The system improves classroom management, enhances engagement analysis, and supports smart learning environments.
+This project implements a complete end-to-end pipeline to detect student behaviors from classroom videos using **YOLOv5 object detection**. It processes input videos, identifies actions frame-by-frame, and provides a detailed visual dashboard along with downloadable PDF reports.
+
+The system achieves:
+
+- ✅ **92.3% accuracy**  
+- ⚡ **18 FPS real-time performance**  
+- 📊 **Action analysis & proximity detection**  
+
+It is designed for smart classroom environments to improve engagement analysis, discipline tracking, and automated monitoring.
 
 ---
 
 ## ⭐ Key Features
-- 🔍 Real-time action detection (YOLOv8)  
-- 🎥 Video upload & automatic processing  
-- 📊 Action statistics & visualization  
-- 📝 PDF report generation using jsPDF  
-- 🌐 Modern React UI  
+- 🔍 Real-time action detection using YOLOv5  
+- 🎥 Video upload + automatic processing  
+- 📊 Action distribution & behavior analytics  
+- 📝 PDF report generation (jsPDF)  
+- 🌐 Modern React UI with Tailwind CSS  
 - ⚡ FastAPI backend for high-speed inference  
-- 🔐 Edge-based processing + privacy-friendly  
-- 🧮 Proximity-based behavior detection  
+- 🔐 Privacy-focused (no data stored, edge processing)  
+- 📏 Proximity-based action mapping  
 
 ---
 
 ## 🧱 System Architecture
 ```
-React Frontend  →  FastAPI Backend  →  YOLOv8 Model  →  Results + Reports
+React Frontend  →  FastAPI Backend  →  YOLOv5 Model  →  Results + PDF Report
 ```
 
 ### Components:
-- **Frontend:** React, Tailwind CSS, Axios  
-- **Backend:** FastAPI, Python, OpenCV, PyTorch  
-- **Model:** YOLOv8  
-- **Report:** jsPDF + AutoTable  
+- **Frontend:** React.js, TypeScript, Tailwind CSS  
+- **Backend:** FastAPI, Python, PyTorch, OpenCV  
+- **Model:** YOLOv5 (custom-trained)  
+- **Reporting:** jsPDF + AutoTable  
 
 ---
 
 ## 🗂️ Dataset & Annotation
-Dataset contains annotated classroom actions including:
+Dataset includes actions:
+
 - Sitting  
 - Standing  
 - Walking  
-- Sleeping  
 - Using Phone  
 - Writing  
+- Sleeping  
 - Raising Hand  
 
-Annotated using **CVAT / Roboflow**.  
+Annotated using **CVAT / Roboflow**.
+
 Dataset structure:
 
 ```
@@ -59,37 +69,41 @@ dataset/
 
 ---
 
-## 🤖 Model Training (YOLOv8)
+## 🤖 Model Training (YOLOv5)
 
-### Training Example
-```python
-from ultralytics import YOLO
+### Training Example (YOLOv5)
 
-model = YOLO("yolov8n.pt")
-model.train(data="data.yaml", epochs=50, imgsz=640)
+```bash
+python train.py --img 640 --batch 16 --epochs 50 --data data.yaml --weights yolov5s.pt
+```
+
+### Resuming Training
+```bash
+python train.py --resume
 ```
 
 ### Inference Example
-```python
-model = YOLO("best.pt")
-model.predict("video.mp4", save=True)
+```bash
+python detect.py --weights best.pt --source video.mp4 --save-txt --save-conf
 ```
 
-### Performance  
+### Model Performance  
 - **Accuracy:** 92.3%  
-- **mAP50:** 0.992  
-- **F1 Score:** 0.98  
-- **Inference speed:** 15–18 FPS  
+- **Inference Speed:** 18 FPS  
+- **Precision/Recall:** High, stable  
+- **Confusion Matrix:** Strong class-wise accuracy  
+- **mAP:** As per validation metrics in training logs  
 
 ---
 
 ## 🔌 Backend (FastAPI)
-The backend handles:
-- Receiving uploaded videos  
-- Frame processing  
-- Running YOLO inference  
-- Sending JSON + annotated outputs  
-- Storing detection results  
+Backend handles:
+
+- Uploading video  
+- Running YOLOv5 inference  
+- Frame-by-frame analytics  
+- Sending JSON results to frontend  
+- Logging timestamps & counts  
 
 ### Run Backend
 ```bash
@@ -99,12 +113,13 @@ uvicorn app:app --reload
 ---
 
 ## 💻 Frontend (React)
-Frontend provides:
-- Drag & drop video upload  
-- Action / Proximity detection mode  
-- Real-time preview  
-- Statistical dashboard  
-- Downloadable PDF report  
+Frontend features:
+
+- Drag-and-drop video upload  
+- Select **Action Detection** or **Proximity Mode**  
+- Real-time playback of annotated video  
+- Statistical dashboard for each processed video  
+- Generate PDF report  
 
 ### Run Frontend
 ```bash
@@ -116,30 +131,39 @@ npm start
 
 ## 📝 PDF Report Generation
 Reports include:
-- Action timestamps  
-- Action summary table  
-- Keyframes of detected events  
-- Total detections  
-- Video duration & FPS  
-- Class-wise graph & distribution  
 
-Generated using **jsPDF + AutoTable**.
+- Total frames, FPS, duration  
+- Action counts & timestamps  
+- Graphs and summary tables  
+- Keyframes from detected actions  
+- Proximity analysis insights  
+
+Generated using:
+
+- **jsPDF**
+- **jsPDF AutoTable**
 
 ---
 
 ## 🧪 Results Summary
-- **Total Frames Processed:** 700+  
-- **Processing Speed:** 15.55 FPS  
-- **Top Classes:**  
-  - Sitting (50.8%)  
-  - Bench (30.2%)  
-  - Standing (19%)  
 
-Graphs included in report:
-- Loss Curve  
-- F1 Confidence Curve  
-- Precision-Recall Curve  
-- Confusion Matrix  
+### Processing Metrics
+- **Total Frames:** 703  
+- **Video Duration:** 24.24 seconds  
+- **Processing Speed:** 15.55 FPS  
+- **Report Mode:** Action / Proximity  
+
+### Detection Distribution
+- **Sitting:** 50.8%  
+- **Bench:** 30.2%  
+- **Standing:** 19.0%  
+
+### Model Performance Graphs
+- Loss curve (box loss, cls loss, dfl loss)  
+- F1 curve  
+- Precision-confidence curve  
+- Precision-recall curve  
+- Confusion matrix  
 
 ---
 
@@ -158,27 +182,28 @@ Action-Detection-Classroom/
 │   ├── package.json
 │
 │── notebooks/
-│   ├── YOLO_training.ipynb
+│   ├── YOLOv5_training.ipynb
 │
 │── reports/
+│
 │── README.md
 ```
 
 ---
 
 ## 🔮 Future Enhancements
+- Transformer-based action recognition  
 - Multi-modal fusion (audio + video)  
-- Transformer-based detection models  
-- On-device inference (privacy-focused)  
-- Multi-camera classroom analytics  
-- Real-time edge deployment  
-- LMS integration for academic analytics  
+- Real-time deployment on GPU servers  
+- On-device (mobile/edge) inference  
+- Multi-camera classroom monitoring  
+- LMS Integration for learning analytics  
 
 ---
 
-## 👨‍💻 Contributor  
+## 👨‍💻 Contributor
 **Vikaas Karthik K – 1RV23SCN17**  
-Dept. of Computer Science & Engineering  
+Department of CSE  
 RV College of Engineering (RVCE)
 
 - GitHub: https://github.com/vikaaskarthikk  
